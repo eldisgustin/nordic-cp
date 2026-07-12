@@ -1,0 +1,12 @@
+---
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+import { playersOnline } from "~/lib/athena";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<p class="text-center">
+  <span class="text-success font-bold">{playersOnline()}</span>{" "}
+  {t("module.statistics.players.online_now")}
+</p>

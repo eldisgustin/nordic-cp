@@ -1,0 +1,26 @@
+---
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+import { isServerUp } from "~/lib/athena";
+import Pip from "./pip.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const [loginUp, charUp, mapUp] = await Promise.all([
+  isServerUp("Login"),
+  isServerUp("Char"),
+  isServerUp("Map"),
+]);
+---
+
+<ul class="flex gap-4">
+  <li>
+    <Pip ok={loginUp}>{t("module.status.login_server")}</Pip>
+  </li>
+  <li>
+    <Pip ok={charUp}>{t("module.status.char_server")}</Pip>
+  </li>
+  <li>
+    <Pip ok={mapUp}>{t("module.status.map_server")}</Pip>
+  </li>
+</ul>

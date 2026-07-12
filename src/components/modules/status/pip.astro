@@ -1,0 +1,16 @@
+---
+import cn from "classnames";
+---
+
+<div class="flex gap-2 items-center">
+  <div
+    class={cn("status", {
+      "status-success": Astro.props.ok,
+      "status-error": Astro.props.ok,
+    })}
+  >
+  </div>
+  <div>
+    <slot />
+  </div>
+</div>

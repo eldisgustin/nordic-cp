@@ -1,0 +1,34 @@
+---
+import "~/styles/global.css";
+
+import Hero from "~/components/hero.astro";
+import Navbar from "~/components/navbar.astro";
+import ServerResume from "~/components/server_resume.astro";
+import { config } from "~/config";
+import { getLangFromUrl } from "~/i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const title = [config.get("Application.SiteTittle"), Astro.props.title].filter(
+  Boolean,
+);
+---
+
+<html lang={lang} data-theme="aqua">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title.join(" | ")}</title>
+  </head>
+  <body class="bg-base-300 min-h-screen">
+    <Hero />
+    <Navbar />
+    {Astro.url.pathname === "/" && <ServerResume />}
+
+    <div class="max-w-4xl mx-auto p-8">
+      <slot />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+---
+import { config } from "~/config";
+
+const { item } = Astro.props;
+const key = `Application.Pages.${item}`;
+const link = config.get(key);
+
+interface Props {
+  item: string;
+}
+---
+
+{
+  typeof link === "string" && (
+    <a href={link} class="link-hover flex items-center gap-1">
+      <slot />
+    </a>
+  )
+}

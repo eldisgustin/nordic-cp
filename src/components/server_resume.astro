@@ -1,0 +1,14 @@
+---
+import ServerStatus from "./modules/status/servers.astro";
+import PlayerCount from "./modules/statistics/player_count.astro";
+---
+
+<div class="flex justify-center">
+  <div
+    class="space-y-2 rounded rounded-t-none border-base-100 bg-base-200 border-b border-x p-4"
+  >
+    <ServerStatus />
+    <hr class="border-base-content/10" />
+    <PlayerCount />
+  </div>
+</div>

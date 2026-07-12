@@ -1,0 +1,26 @@
+---
+import { eq } from "drizzle-orm";
+import * as nordic from "~/db/nordic";
+import Main from "~/layouts/main.astro";
+
+const { path } = Astro.params;
+
+if (!path) {
+  return Astro.redirect("/not-found");
+}
+const [page] = await nordic.db
+  .select()
+  .from(nordic.schema.page)
+  .where(eq(nordic.schema.page.path, `/${path}`))
+  .limit(1);
+
+if (!page) {
+  return Astro.redirect("/not-found");
+}
+---
+
+<Main title={page.title}>
+  <article class="prose">
+    <Fragment set:html={page.body} />
+  </article>
+</Main>

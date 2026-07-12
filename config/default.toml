@@ -1,0 +1,56 @@
+[Application]
+# ------ Customization
+BaseURL = "http://localhost:4321"
+SiteTittle = "Nordic Control Panel"
+SiteDefaultLang = "en"
+UseCaptcha = false
+DatabaseURL = "mysql://user:password@localhost/nordic"
+Timezone = "+00:00" # Set null for system's default
+ServerStatusCacheTTL = "1m" # Duration of status cache to avoid socket spam and potentially be marked as spam
+
+# ------ Account settings
+UsernameAllowerChars = "a-zA-Z0-9_"
+MinUsernameLength = 4
+MaxUsernameLength = 23
+MinPasswordLenght = 8
+MaxPasswordLength = 31
+
+# ------ Email settings
+MailEnabled = false
+# Below values are unused if previous value is not enabled
+MaiLSMTPHost = "host"
+MailSMTPPassword = "password"
+MailSMTPPort = 587
+MailFromAddress = "noreply@domain"
+MailFromName = "Mailer"
+
+# ------ Authentication
+# A secret value used for encryption and hashing.
+# It must be at least 32 characters and generated
+# with high entropy.
+# You can use openssl rand -base64 32 to generate one.
+AuthSecret = "32charsecret"
+
+[Application.Pages]
+# ------ Pages
+# Set any of these to false to remove them from the navbar
+# or point them whenever youi want.
+Home = "/"              # This is a built-in page
+Download = "/download"  # This is a built-in page
+Info = '/info'          # This is a built-in page
+Account = '/account'    # This is a built-in page
+Forums = false
+ItemDB = false
+MobDB = false
+
+# ------ Session
+SessionCookieName = "nordic_session"
+
+[Athena]
+ServerName = "MyRoServer"
+DatabaseURL = "mysql://user:password@localhost/rathena"
+
+[Athena.Servers]
+Login = { host = "localhost", port = 6900 }
+Char = { host = "localhost", port = 6121 }
+Map = { host = "localhost", port = 5121 }

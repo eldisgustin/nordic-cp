@@ -1,0 +1,18 @@
+---
+import "jodit/es2021/jodit.min.css";
+---
+
+<textarea
+  id="editor"
+  class="prose prose-slate skeleton bg-white h-200"
+  {...Astro.props}
+>
+</textarea>
+
+<script>
+  import { Jodit } from "jodit";
+
+  const container = document.getElementById("editor")!;
+
+  Jodit.make(container, { className: "text-black" });
+</script>

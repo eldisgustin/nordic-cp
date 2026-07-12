@@ -1,0 +1,40 @@
+---
+import { actions } from "astro:actions";
+import Editor from "~/components/ui/editor.astro";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+import Main from "~/layouts/main.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<Main title={t("pages.new.title")}>
+  <main class="page-container">
+    <form method="post" action={actions.pages.create}>
+      <fieldset class="fieldset">
+        <label for="title" class="label">{t("pages.new.form.title")}</label>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          class="input w-full"
+          required
+        />
+
+        <label for="path" class="label">{t("pages.new.form.path")}</label>
+        <input
+          id="path"
+          name="path"
+          type="text"
+          class="input w-full"
+          required
+        />
+
+        <label for="body" class="label">{t("pages.new.form.body")}</label>
+        <Editor id="body" name="body" required />
+
+        <button class="btn btn-primary">{t("pages.new.form.submit")}</button>
+      </fieldset>
+    </form>
+  </main>
+</Main>

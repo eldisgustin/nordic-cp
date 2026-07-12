@@ -1,0 +1,136 @@
+---
+import { eq } from "drizzle-orm";
+import * as athena from "~/db/athena";
+import {
+  getLangFromUrl,
+  useTranslations,
+  formatDateTime,
+  formatNumber,
+} from "~/i18n/utils";
+import Main from "~/layouts/main.astro";
+import cn from "classnames";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { isAuthenticated, user } = Astro.locals;
+
+if (!isAuthenticated || !user) {
+  return Astro.redirect("/unauthorized");
+}
+
+const [roAccount] = await athena.db
+  .select()
+  .from(athena.login)
+  .where(eq(athena.login.email, user.email))
+  .limit(1);
+
+const characters = await athena.db
+  .select()
+  .from(athena.char)
+  .where(eq(athena.char.accountId, roAccount.accountId))
+  .orderBy(athena.char.charNum);
+
+const totalZeny = characters.reduce((prev, next) => prev + next.zeny, 0);
+---
+
+<Main title={t("account.title")}>
+  <div class="bg-base-200 border rounded border-base-100 p-4 space-y-6 shadow">
+    <ul class="list">
+      <li class="p-4 text-lg opacity-60 tracking-wide">
+        {t("account.details.title")}
+      </li>
+
+      <li class="list-row">
+        <div class="font-bold">{t("account.details.username")}</div>
+        <div>{roAccount.userid}</div>
+        <div class="font-bold">{t("account.details.email")}</div>
+        <div>{roAccount.email}</div>
+      </li>
+
+      <li class="list-row">
+        <div class="font-bold">{t("account.details.login_count")}</div>
+        <div>{roAccount.logincount}</div>
+        <div class="font-bold">{t("account.details.account_id")}</div>
+        <div>{roAccount.accountId}</div>
+      </li>
+
+      <li class="list-row">
+        <div class="font-bold">{t("account.details.state")}</div>
+        <div>{roAccount.state}</div>
+        <div class="font-bold">{t("account.details.group_id")}</div>
+        <div>{roAccount.groupId}</div>
+      </li>
+
+      <li class="list-row">
+        <div class="font-bold">{t("account.details.birthdate")}</div>
+        <div>{roAccount.birthdate}</div>
+      </li>
+
+      <li class="list-row">
+        <div class="font-bold">{t("account.details.last_login")}</div>
+        <div>
+          {roAccount.lastlogin && formatDateTime(roAccount.lastlogin, lang)}
+        </div>
+
+        <div class="font-bold">{t("account.details.last_ip")}</div>
+        <div class="font-mono">{roAccount.lastIp}</div>
+      </li>
+    </ul>
+
+    <ul class="list">
+      <li class="p-4 text-lg opacity-60 tracking-wide">
+        {t("account.characters.title")}
+      </li>
+
+      <li>
+        <table class="table overflow-x-auto">
+          <thead>
+            <tr>
+              <td>{t("account.characters.table_header.slot")}</td>
+              <td>{t("account.characters.table_header.name")}</td>
+              <td>{t("account.characters.table_header.job")}</td>
+              <td>{t("account.characters.table_header.base_level")}</td>
+              <td>{t("account.characters.table_header.job_level")}</td>
+              <td>{t("account.characters.table_header.zeny")}</td>
+              <td>{t("account.characters.table_header.guild")}</td>
+              <td>{t("account.characters.table_header.status")}</td>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              characters.map((character) => {
+                const isOnline = Boolean(character.online);
+                return (
+                  <tr>
+                    <th>{Number(character.charNum)}</th>
+                    <td>{character.name}</td>
+                    <td>{character.class}</td>
+                    <td>{character.baseLevel}</td>
+                    <td>{character.jobLevel}</td>
+                    <td>{formatNumber(character.zeny, lang)}</td>
+                    <td>{character.guildId}</td>
+                    <td
+                      class={cn({
+                        "opacity-40": !isOnline,
+                        "font-bold": isOnline,
+                      })}
+                    >
+                      {t(`etc.online.${isOnline}`)}
+                    </td>
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </li>
+
+      <li class="list-row">
+        <label for="total_zeny">{t("account.characters.total_zeny")}</label>
+        <div id="total_zeny" class="font-bold">
+          {formatNumber(totalZeny, lang)}
+        </div>
+      </li>
+    </ul>
+  </div>
+</Main>
