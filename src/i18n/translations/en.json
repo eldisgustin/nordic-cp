@@ -163,6 +163,7 @@
   "pages.form.path": "Handle",
   "pages.form.location": "Location",
   "pages.form.submit": "Save",
+  "pages.form.icon": "Icon",
 
   "pages.view.title": "Website content editor",
   "pages.view.description": "This page allows Admins to edit some of the control panel's content without coding knowledge",

@@ -16,10 +16,11 @@ if (!canSee) {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const [character] = await athena.db
-  .select()
+const [{ char: character, login: user }] = await athena.db
+  .select({ char: athena.char, login: { username: athena.login.userid } })
   .from(athena.char)
-  .where(eq(athena.char.charId, Number(Astro.params.id)));
+  .where(eq(athena.char.charId, Number(Astro.params.id)))
+  .leftJoin(athena.login, eq(athena.char.accountId, athena.login.accountId));
 ---
 
 <AccountLayout title={t("characters.view.title")}>
@@ -31,7 +32,7 @@ const [character] = await athena.db
             class="link link-primary"
             href={`/accounts/${character.accountId}`}
           >
-            {character.accountId}
+            {user?.username}
           </a>
         </li>
         <li>{character.name}</li>

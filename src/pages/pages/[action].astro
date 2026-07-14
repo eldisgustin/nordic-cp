@@ -6,6 +6,7 @@ import Main from "~/layouts/main_layout.astro";
 import * as nordic from "~/db/nordic";
 import { eq } from "drizzle-orm";
 import { PageLocation } from "~/consts/page_location";
+import { isInputError } from "astro:actions";
 
 const result = Astro.getActionResult(actions.pages.put);
 
@@ -13,6 +14,7 @@ if (result && !result.error) {
   return Astro.redirect("/pages");
 }
 
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
 const { action } = Astro.params;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -46,6 +48,11 @@ if (action === "edit") {
           value={page?.title}
           required
         />
+        {
+          inputErrors.title && (
+            <p class="label">{inputErrors.title.join(",")}</p>
+          )
+        }
 
         <label for="path" class="label">{t("pages.form.path")}</label>
         <input
@@ -56,7 +63,9 @@ if (action === "edit") {
           value={page?.path}
           required
         />
-        <label for="path" class="label">{t("pages.form.location")}</label>
+        {inputErrors.path && <p class="label">{inputErrors.path.join(",")}</p>}
+
+        <label for="location" class="label">{t("pages.form.location")}</label>
         <select class="select w-full" name="location" id="location">
           {
             Object.values(PageLocation).map((location) => (
@@ -66,8 +75,9 @@ if (action === "edit") {
             ))
           }
         </select>
+        {inputErrors.path && <p class="label">{inputErrors.path.join(",")}</p>}
 
-        <label for="path" class="label">{t("pages.form.icon")}</label>
+        <label for="icon" class="label">{t("pages.form.icon")}</label>
         <input
           id="icon"
           name="icon"
@@ -76,9 +86,11 @@ if (action === "edit") {
           value={page?.icon}
           required
         />
+        {inputErrors.icon && <p class="label">{inputErrors.icon.join(",")}</p>}
 
         <label for="body" class="label">{t("pages.form.body")}</label>
         <Editor id="body" name="body" value={page?.body} required />
+        {inputErrors.body && <p class="label">{inputErrors.body.join(",")}</p>}
 
         <button class="mt-4 btn btn-primary">{t("pages.form.submit")}</button>
       </fieldset>

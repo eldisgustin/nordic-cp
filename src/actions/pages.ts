@@ -8,9 +8,9 @@ export const pages = {
     accept: "form",
     input: z.object({
       id: z.number().optional(),
-      path: z.string().min(3).max(100),
-      location: z.enum(PageLocation),
       title: z.string().min(3).max(100),
+      path: z.string().min(1).max(100),
+      location: z.enum(PageLocation),
       icon: z.string().min(4),
       body: z.string(),
     }),
