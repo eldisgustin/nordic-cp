@@ -1,10 +1,18 @@
 ---
+import { Image } from "astro:assets";
 import config from "config";
+import HeroImage from "~/assets/hero.png";
 ---
 
 <div
-  class="flex items-center justify-center min-h-64 max-h-96 bg-linear-to-r from-5%% to-95% from-base-100 via-base-300 to-base-100"
+  class="relative overflow-hidden flex items-center justify-center min-h-64 max-h-96 bg-linear-to-r from-5%% to-95% from-base-100 via-base-300 to-base-100"
 >
+  <Image src={HeroImage} alt="Hero Image" class="absolute w-full blur-3xl" />
+  <Image
+    src={HeroImage}
+    alt="Hero Image"
+    class="absolute object-cover h-full"
+  />
   <span class="text-6xl">
     {config.get("Application.SiteTittle")}
   </span>

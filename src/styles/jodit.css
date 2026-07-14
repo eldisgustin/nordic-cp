@@ -1,0 +1,15 @@
+.jodit-wysiwyg {
+  @apply prose max-w-full;
+}
+
+.jodit_theme_nordic {
+  --jd-color-background-default: var(--color-base-300);
+  --jd-color-border: var(--color-base-200);
+  --jd-color-panel: var(--color-base-100);
+  --jd-color-icon: var(--color-base-content);
+  --jd-font-default: var(--color-base-content);
+  --jd-color-text-icons: var(--color-base-content);
+  --jd-color-white: var(--color-base-100);
+  --jd-border-color: var(--color-base-100);
+  --jd-color-background-light-gray: var(--color-base-100);
+}

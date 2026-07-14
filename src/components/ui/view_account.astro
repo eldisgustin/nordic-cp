@@ -1,0 +1,139 @@
+---
+import type { User } from "better-auth";
+import cn from "classnames";
+import { eq } from "drizzle-orm";
+import { SignOut } from "~/components/ui/signout";
+import * as athena from "~/db/athena";
+import {
+  formatDateTime,
+  formatNumber,
+  getLangFromUrl,
+  useTranslations,
+} from "~/i18n/utils";
+
+type Props = {
+  roAccount: typeof athena.login.$inferSelect;
+};
+
+const { roAccount } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const characters = await athena.db
+  .select()
+  .from(athena.char)
+  .where(eq(athena.char.accountId, roAccount.accountId))
+  .orderBy(athena.char.charNum);
+
+const totalZeny = characters.reduce((prev, next) => prev + next.zeny, 0);
+---
+
+<div class="space-y-8">
+  <ul class="page-container list">
+    <li class="p-4 text-lg font-bold text-primary tracking-wide">
+      {t("account.title")}
+    </li>
+
+    <li class="list-row">
+      <div class="font-bold">{t("account.username")}</div>
+      <div>{roAccount.userid}</div>
+      <div class="font-bold">{t("account.email")}</div>
+      <div>{roAccount.email}</div>
+    </li>
+
+    <li class="list-row">
+      <div class="font-bold">{t("account.login_count")}</div>
+      <div>{roAccount.logincount}</div>
+      <div class="font-bold">{t("account.account_id")}</div>
+      <div>{roAccount.accountId}</div>
+    </li>
+
+    <li class="list-row">
+      <div class="font-bold">{t("account.state")}</div>
+      <div>{roAccount.state}</div>
+      <div class="font-bold">{t("account.group_id")}</div>
+      <div>{roAccount.groupId}</div>
+    </li>
+
+    <li class="list-row">
+      <div class="font-bold">{t("account.birthdate")}</div>
+      <div>{roAccount.birthdate ?? "-"}</div>
+    </li>
+
+    <li class="list-row">
+      <div class="font-bold">{t("account.last_login")}</div>
+      <div>
+        {roAccount.lastlogin && formatDateTime(roAccount.lastlogin, lang)}
+      </div>
+
+      <div class="font-bold">{t("account.last_ip")}</div>
+      <div class="font-mono">{roAccount.lastIp}</div>
+    </li>
+  </ul>
+
+  <ul class="page-container list">
+    <li class="p-4 text-lg font-bold text-primary tracking-wide">
+      {t("characters.title")}
+    </li>
+
+    <li>
+      <table class="table overflow-x-auto">
+        <thead>
+          <tr>
+            <td>{t("character.name")}</td>
+            <td>{t("character.job")}</td>
+            <td>{t("character.base_level")}</td>
+            <td>{t("character.job_level")}</td>
+            <td>{t("character.zeny")}</td>
+            <td>{t("character.guild")}</td>
+            <td>{t("character.status")}</td>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            characters.map((character) => {
+              const isOnline = Boolean(character.online);
+              return (
+                <tr>
+                  <td>
+                    <a
+                      class="link link-primary"
+                      href={`/characters/${character.charId}`}
+                    >
+                      {character.name}
+                    </a>
+                  </td>
+                  <td>
+                    {
+                      // @ts-ignore
+                      t(`game.job_class.${character.class}`)
+                    }
+                  </td>
+                  <td>{character.baseLevel}</td>
+                  <td>{character.jobLevel}</td>
+                  <td>{formatNumber(character.zeny, lang)}</td>
+                  <td>{character.guildId}</td>
+                  <td
+                    class={cn({
+                      "opacity-40": !isOnline,
+                      "font-bold": isOnline,
+                    })}
+                  >
+                    {t(`etc.online.${isOnline}`)}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </li>
+
+    <li class="list-row">
+      <label for="total_zeny">{t("account.characters.total_zeny")}</label>
+      <div id="total_zeny" class="font-bold text-accent">
+        {formatNumber(totalZeny, lang)}
+      </div>
+    </li>
+  </ul>
+</div>

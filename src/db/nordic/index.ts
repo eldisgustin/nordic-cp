@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import { config } from "~/config";
 
-export * as schema from "./schema";
+export * from "./schema";
 
 export const db = drizzle({
   connection: {

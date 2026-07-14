@@ -1,7 +1,6 @@
-import { authClient } from "~/lib/auth/client";
-import { useTranslations } from "~/i18n/utils";
 import type { Languages } from "~/i18n/ui";
-import consola from "consola";
+import { useTranslations } from "~/i18n/utils";
+import { authClient } from "~/lib/auth/client";
 
 type SignupCardProps = {
   lang: Languages;
@@ -22,45 +21,29 @@ export function SignIn({ lang }: SignupCardProps) {
   const t = useTranslations(lang);
 
   return (
-    <>
-      <button popoverTarget="signin-modal">{t("signin.cta")}</button>
+    <form action={action}>
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">{t("signin.title")}</legend>
 
-      <div id="signin-modal" className="modal" popover="">
-        <div className="modal-box">
-          <form action={action}>
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">{t("signin.cta")}</legend>
+        <label className="label">{t("signin.form.email")}</label>
+        <input
+          name="email"
+          type="email"
+          className="input w-full"
+          placeholder={t("signin.form.email")}
+          required
+        />
 
-              <label className="label">{t("signin.form.email")}</label>
-              <input
-                name="email"
-                type="email"
-                className="input w-full"
-                placeholder={t("signin.form.email")}
-                required
-              />
-
-              <label className="label">{t("signin.form.password")}</label>
-              <input
-                name="password"
-                type="password"
-                className="input w-full"
-                placeholder={t("signin.form.password")}
-                required
-              />
-              <button className="btn btn-neutral mt-4">
-                {t("signin.submit")}
-              </button>
-            </fieldset>
-          </form>
-        </div>
-        <div className="modal-backdrop">
-          <button
-            popoverTarget="signin-modal"
-            popoverTargetAction="hide"
-          ></button>
-        </div>
-      </div>
-    </>
+        <label className="label">{t("signin.form.password")}</label>
+        <input
+          name="password"
+          type="password"
+          className="input w-full"
+          placeholder={t("signin.form.password")}
+          required
+        />
+        <button className="btn btn-neutral mt-4">{t("signin.submit")}</button>
+      </fieldset>
+    </form>
   );
 }

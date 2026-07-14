@@ -1,0 +1,59 @@
+---
+import Main from "~/layouts/main_layout.astro";
+import * as athena from "~/db/athena";
+import { eq } from "drizzle-orm";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+import { canSeePage } from "~/lib/permissions";
+import { PagesIndex } from "~/consts/pages_index";
+import { Icon } from "astro-icon/components";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const onlineChars = await athena.db
+  .select()
+  .from(athena.char)
+  .where(eq(athena.char.online, 1));
+
+if (!(await canSeePage(Astro.url.pathname, Astro.locals.user))) {
+  return Astro.redirect(PagesIndex.Unauthorized);
+}
+---
+
+<Main title={t("who_is_online.title")}>
+  <main>
+    {
+      onlineChars.length !== 0 ? (
+        <table class="page-container table table-zebra">
+          <thead>
+            <th>{t("character.name")}</th>
+            <th>{t("character.job")}</th>
+            <th>{t("character.base_level")}</th>
+            <th>{t("character.job_level")}</th>
+            <th>{t("character.last_map")}</th>
+          </thead>
+          <tbody>
+            {onlineChars.map((char) => (
+              <tr>
+                <td>{char.name}</td>
+                <td>
+                  {
+                    // @ts-expect-error
+                    t(`game.job_class.${char.class}`)
+                  }
+                </td>
+                <td>{char.baseLevel}</td>
+                <td>{char.jobLevel}</td>
+                <td>{char.lastMap}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div class="alert ">
+          <Icon name="mdi:info" class="text-info text-2xl" />
+          <span>{t("who_is_online.no_players")}</span>
+        </div>
+      )
+    }
+  </main>
+</Main>

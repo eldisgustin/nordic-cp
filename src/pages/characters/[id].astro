@@ -1,0 +1,111 @@
+---
+import { PagesIndex } from "~/consts/pages_index";
+import { formatNumber, getLangFromUrl, useTranslations } from "~/i18n/utils";
+import AccountLayout from "~/layouts/account_layout.astro";
+import { isAllowedTo } from "~/lib/permissions";
+import * as athena from "~/db/athena";
+import { eq } from "drizzle-orm";
+import { Icon } from "astro-icon/components";
+
+const canSee = await isAllowedTo("character:view", Astro.locals.user);
+
+if (!canSee) {
+  return Astro.redirect(PagesIndex.Unauthorized);
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const [character] = await athena.db
+  .select()
+  .from(athena.char)
+  .where(eq(athena.char.charId, Number(Astro.params.id)));
+---
+
+<AccountLayout title={t("characters.view.title")}>
+  <main class="space-y-8">
+    <div class="breadcrumbs">
+      <ul>
+        <li>
+          <a
+            class="link link-primary"
+            href={`/accounts/${character.accountId}`}
+          >
+            {character.accountId}
+          </a>
+        </li>
+        <li>{character.name}</li>
+      </ul>
+    </div>
+
+    <section class="page-container space-y-4">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th class="bg-base-300">{t("character.id")}</th>
+            <td>{character.charId}</td>
+            <th class="bg-base-300">{t("character.job")}</th>
+            <td>
+              {
+                //@ts-expect-error
+                t(`game.job_class.${character.class}`)
+              }
+            </td>
+          </tr>
+          <tr> </tr>
+          <tr>
+            <th class="bg-base-300">{t("character.base_level")}</th>
+            <td>{character.baseLevel}</td>
+            <th class="bg-base-300">{t("character.base_exp")}</th>
+            <td>{formatNumber(character.baseExp, lang)}</td>
+          </tr>
+          <tr>
+            <th class="bg-base-300">{t("character.job_level")}</th>
+            <td>{character.jobLevel}</td>
+            <th class="bg-base-300">{t("character.job_exp")}</th>
+            <td>{formatNumber(character.jobExp, lang)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="page-container space-y-2">
+      <h1 class="font-4xl font-bold text-primary">
+        {t("characters.view.stats_title")}
+      </h1>
+
+      <ol class="list">
+        <li class="list-row">
+          <Icon name="game-icons:pointy-sword" class="text-xl" />
+          <div>{t("game.stats.str")}</div>
+          <div>{character.str}</div>
+        </li>
+        <li class="list-row">
+          <Icon name="game-icons:walking-boot" class="text-xl" />
+          <div>{t("game.stats.agi")}</div>
+          <div>{character.agi}</div>
+        </li>
+        <li class="list-row">
+          <Icon name="game-icons:strong" class="text-xl" />
+          <div>{t("game.stats.vit")}</div>
+          <div>{character.vit}</div>
+        </li>
+        <li class="list-row">
+          <Icon name="game-icons:wizard-staff" class="text-xl" />
+          <div>{t("game.stats.int")}</div>
+          <div>{character.int}</div>
+        </li>
+        <li class="list-row">
+          <Icon name="game-icons:targeted" class="text-xl" />
+          <div>{t("game.stats.dex")}</div>
+          <div>{character.dex}</div>
+        </li>
+        <li class="list-row">
+          <Icon name="game-icons:two-coins" class="text-xl" />
+          <div>{t("game.stats.luk")}</div>
+          <div>{character.luk}</div>
+        </li>
+      </ol>
+    </section>
+  </main>
+</AccountLayout>

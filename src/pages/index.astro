@@ -1,5 +1,17 @@
 ---
-import Main from "~/layouts/main.astro";
+import { eq } from "drizzle-orm";
+import * as nordic from "~/db/nordic";
+import Main from "~/layouts/main_layout.astro";
+
+const [page] = await nordic.db
+  .select()
+  .from(nordic.page)
+  .where(eq(nordic.page.path, `/`))
+  .limit(1);
 ---
 
-<Main />
+<Main title={page.title}>
+  <article class="prose">
+    <Fragment set:html={page.body} />
+  </article>
+</Main>

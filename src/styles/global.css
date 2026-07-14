@@ -1,10 +1,45 @@
 @import "tailwindcss";
+@import "./jodit.css";
+
 @plugin "@tailwindcss/typography";
 
-@plugin "daisyui" {
-    themes: all;
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "chingaro";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(37% 0.013 285.805);
+  --color-base-200: oklch(27% 0.006 286.033);
+  --color-base-300: oklch(21% 0.006 285.885);
+  --color-base-content: oklch(97% 0.014 254.604);
+  --color-primary: oklch(79% 0.184 86.047);
+  --color-primary-content: oklch(28% 0.109 3.907);
+  --color-secondary: oklch(71% 0.203 305.504);
+  --color-secondary-content: oklch(29% 0.149 302.717);
+  --color-accent: oklch(76% 0.177 163.223);
+  --color-accent-content: oklch(37% 0.077 168.94);
+  --color-neutral: oklch(14% 0.004 49.25);
+  --color-neutral-content: oklch(100% 0 0);
+  --color-info: oklch(70% 0.165 254.624);
+  --color-info-content: oklch(28% 0.091 267.935);
+  --color-success: oklch(84% 0.238 128.85);
+  --color-success-content: oklch(27% 0.072 132.109);
+  --color-warning: oklch(90% 0.182 98.111);
+  --color-warning-content: oklch(26% 0.079 36.259);
+  --color-error: oklch(80% 0.114 19.571);
+  --color-error-content: oklch(28% 0.109 3.907);
+  --radius-selector: 0.25rem;
+  --radius-field: 1rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
 }
 
 @utility page-container {
-    @apply bg-base-200 border rounded border-base-100 p-4 space-y-6 shadow;
+  @apply bg-base-200 border rounded border-base-100 p-4 space-y-6 shadow;
 }

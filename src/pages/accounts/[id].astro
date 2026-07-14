@@ -5,22 +5,27 @@ import { PagesIndex } from "~/consts/pages_index";
 import * as athena from "~/db/athena";
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 import AccountLayout from "~/layouts/account_layout.astro";
+import { isAllowedTo } from "~/lib/permissions";
+
+if (!(await isAllowedTo("account:view", Astro.locals.user))) {
+  return Astro.redirect(PagesIndex.Unauthorized);
+}
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const { user } = Astro.locals;
-
-if (!user) {
-  return Astro.redirect(PagesIndex.NotFound);
-}
 
 const [roAccount] = await athena.db
   .select()
   .from(athena.login)
-  .where(eq(athena.login.email, user.email))
-  .limit(1);
+  .where(eq(athena.login.accountId, Number(Astro.params.id)));
+
+if (!roAccount) {
+  return Astro.redirect(PagesIndex.NotFound);
+}
 ---
 
 <AccountLayout title={t("account.title")}>
-  <AccountView roAccount={roAccount} />
+  <main class="page-container space-y-4">
+    <AccountView roAccount={roAccount} />
+  </main>
 </AccountLayout>

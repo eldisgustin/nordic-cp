@@ -1,0 +1,84 @@
+---
+import Main from "~/layouts/main_layout.astro";
+import * as nordic from "~/db/nordic";
+import { asc } from "drizzle-orm";
+import {
+  formatDate,
+  formatDateTime,
+  formatRelativeTime,
+  getLangFromUrl,
+  useTranslations,
+} from "~/i18n/utils";
+import AccountLayout from "~/layouts/account_layout.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const limit = 15;
+const offset = 0;
+const pages = await nordic.db
+  .select()
+  .from(nordic.page)
+  .orderBy(asc(nordic.page.id))
+  .limit(limit)
+  .offset(offset);
+---
+
+<AccountLayout title={t("pages.view.title")}>
+  <main class="space-y-8">
+    <h1 class="text-2xl font-bold">{t("pages.view.title")}</h1>
+    <p>{t("pages.view.description")}</p>
+
+    <div class="text-end">
+      <a href="/pages/new" class="btn btn-primary"
+        >{t("pages.view.new_page-action")}</a
+      >
+    </div>
+    <div class="page-container space-y-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="">{t("pages.view.thead.title")}</th>
+            <th class="">{t("pages.view.thead.location")}</th>
+            <th class="">{t("pages.view.thead.created")}</th>
+            <th class="">{t("pages.view.thead.last_modified")}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            pages.map((page) => (
+              <tr>
+                <th>{page.id}</th>
+                <td>
+                  <div class="tooltip" data-tip={t("pages.view.tbody.view")}>
+                    <a class="link-hover" href={page.path}>
+                      {page.title}
+                    </a>
+                  </div>
+                </td>
+                <td>{t(`etc.page_location.${page.location}`)}</td>
+                <td>{formatDate(page.createdAt, lang)}</td>
+                <td>{formatRelativeTime(page.updatedAt, Date.now(), lang)}</td>
+                <td class="space-x-2">
+                  <a
+                    class="btn btn-sm btn-neutral"
+                    href={`/pages/edit?id=${page.id}`}
+                  >
+                    {t("pages.view.tbody.edit-action")}
+                  </a>
+                  <a
+                    class="btn btn-sm btn-neutral"
+                    href={`/pages/delete?id=${page.id}`}
+                  >
+                    {t("pages.view.tbody.delete-action")}
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </main>
+</AccountLayout>

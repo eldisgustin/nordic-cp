@@ -13,7 +13,7 @@ const title = [config.get("Application.SiteTittle"), Astro.props.title].filter(
 );
 ---
 
-<html lang={lang} data-theme="aqua">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -27,7 +27,7 @@ const title = [config.get("Application.SiteTittle"), Astro.props.title].filter(
     <Navbar />
     {Astro.url.pathname === "/" && <ServerResume />}
 
-    <div class="max-w-4xl mx-auto p-8">
+    <div class="max-w-7xl mx-auto p-8">
       <slot />
     </div>
   </body>

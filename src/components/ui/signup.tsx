@@ -25,13 +25,19 @@ export function SignUp({ lang }: SignupCardProps) {
 
   return (
     <>
-      <button popoverTarget="signup-modal">{t("signup.cta")}</button>
+      <button
+        className="btn btn-link"
+        type="button"
+        popoverTarget="signup-modal"
+      >
+        {t("signup.form.submit_btn")}
+      </button>
 
       <div id="signup-modal" className="modal" popover="">
         <div className="modal-box">
           <form action={signup}>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">{t("signup.cta")}</legend>
+              <legend className="fieldset-legend">{t("signup.title")}</legend>
 
               <label className="label">{t("signup.form.name")}</label>
               <input

@@ -1,12 +1,15 @@
 ---
 import "jodit/es2021/jodit.min.css";
+
+const { value, ...props } = Astro.props;
 ---
 
 <textarea
   id="editor"
-  class="prose prose-slate skeleton bg-white h-200"
-  {...Astro.props}
+  class="prose w-full prose-slate skeleton bg-base-300 h-40"
+  {...props}
 >
+  <Fragment set:html={value} />
 </textarea>
 
 <script>
@@ -14,5 +17,5 @@ import "jodit/es2021/jodit.min.css";
 
   const container = document.getElementById("editor")!;
 
-  Jodit.make(container, { className: "text-black" });
+  Jodit.make(container, { theme: "nordic" });
 </script>

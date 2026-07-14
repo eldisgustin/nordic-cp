@@ -1,13 +1,16 @@
 import {
   boolean,
   index,
-  mysqlTable,
   int,
+  mysqlEnum,
+  mysqlTable,
+  serial,
   text,
   timestamp,
   varchar,
-  serial,
 } from "drizzle-orm/mysql-core";
+
+const roles = ["Admin", "Anonymous", "Anyone", "GM", "Normal"] as const;
 
 export const user = mysqlTable("user", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -88,14 +91,23 @@ export const page = mysqlTable(
     path: varchar("path", { length: 100 }).notNull(),
     title: varchar("title", { length: 100 }).notNull(),
     body: text("body").notNull(),
+    location: mysqlEnum(["navbar", "none"]).notNull().default("none"),
+    minimunVisibility: mysqlEnum(roles).notNull().default("Anyone"),
+    icon: text("icon").default("mdi:paper"),
+    order: int("order"),
     createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { fsp: 3 })
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
-    lastModifiedBy: varchar("last_modified_by", { length: 36 })
-      .notNull()
-      .references(() => user.id),
+    lastModifiedBy: varchar("last_modified_by", { length: 36 }).references(
+      () => user.id,
+    ),
   },
   (table) => [index("session_userId_idx").on(table.lastModifiedBy)],
 );
+
+export const permission = mysqlTable("permission", {
+  role: mysqlEnum(roles).notNull(),
+  name: varchar("name", { length: 100 }).primaryKey().notNull(),
+});

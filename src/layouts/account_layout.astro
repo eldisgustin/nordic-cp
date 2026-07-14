@@ -1,0 +1,16 @@
+---
+import UserActions from "~/components/ui/user_actions.astro";
+import MainLayout from "./main_layout.astro";
+
+interface Props {
+  title: String;
+}
+---
+
+<MainLayout {...Astro.props}>
+  <UserActions />
+  <div class="divider"></div>
+  <div class="mt-4">
+    <slot />
+  </div>
+</MainLayout>

@@ -1,0 +1,69 @@
+---
+import { PagesIndex } from "~/consts/pages_index";
+import * as athena from "~/db/athena";
+import { formatDate, getLangFromUrl, useTranslations } from "~/i18n/utils";
+import AccountLayout from "~/layouts/account_layout.astro";
+import { isAllowedTo } from "~/lib/permissions";
+
+if (!(await isAllowedTo("account:list", Astro.locals.user))) {
+  return Astro.redirect(PagesIndex.Unauthorized);
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const limit = 25;
+const offset = 0;
+
+const users = await athena.db
+  .select()
+  .from(athena.login)
+  .limit(limit)
+  .offset(offset);
+---
+
+<AccountLayout title={t("account.list.title")}>
+  <main class="page-container space-y-4">
+    <h1 class="font-bold text-2xl text-primary">
+      {t("account.list.title")}
+    </h1>
+    <div class="overflow-x-auto max-w-full">
+      <table class="table table-xs table-pin-rows">
+        <thead>
+          <th>{t("account.account_id")}</th>
+          <th>{t("account.username")}</th>
+          <th>{t("account.group_id")}</th>
+          <th>{t("account.state")}</th>
+          <th>{t("account.credit_balance")}</th>
+          <th>{t("account.email")}</th>
+          <th>{t("account.login_count")}</th>
+          <th>{t("account.last_login")}</th>
+          <th>{t("account.last_ip")}</th>
+        </thead>
+        <tbody>
+          {
+            users.map((user) => (
+              <tr>
+                <td class="font-mono">
+                  <a
+                    class="link link-primary"
+                    href={`/accounts/${user.accountId}`}
+                  >
+                    {user.accountId}
+                  </a>
+                </td>
+                <td>{user.userid}</td>
+                <td>{user.groupId}</td>
+                <td>{user.state}</td>
+                <td>-</td>
+                <td>{user.email}</td>
+                <td>{user.logincount}</td>
+                <td>{user.lastlogin && formatDate(user.lastlogin, lang)}</td>
+                <td class="font-mono">{user.lastIp}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </main>
+</AccountLayout>

@@ -1,10 +1,14 @@
+// server-side code
+
 import consola from "consola";
-import { count, gt } from "drizzle-orm";
+import { count, eq, gt } from "drizzle-orm";
 import ms from "ms";
 import net from "node:net";
 import { config } from "~/config";
 import * as athena from "~/db/athena";
 import { cache } from "~/lib/cache";
+import { UserRole } from "~/consts/user_roles";
+import type { User } from "better-auth";
 
 const serverStatusCacheTTL = ms(config.get("Application.ServerStatusCacheTTL"));
 
@@ -39,12 +43,10 @@ export function isServerUp(server: "Login" | "Char" | "Map") {
 }
 
 export async function playersOnline() {
-  const logger = consola.withTag("athena.players_online");
   const key = "Athena.Servers.PlayerCount";
   const cached = cache.get<number>(key);
 
   if (cached !== undefined) {
-    logger.debug("cache found for", cached);
     return cached;
   }
 
@@ -58,4 +60,21 @@ export async function playersOnline() {
   cache.set(key, playersOnline, serverStatusCacheTTL);
 
   return playersOnline;
+}
+
+export function getUserRole(groupId: number): UserRole {
+  const levels = config.get<Record<number, UserRole>>("Athena.Levels");
+  const level = levels[groupId];
+
+  // @ts-expect-error: idk how to type this
+  return UserRole[level] ?? UserRole.Anonymous;
+}
+
+export async function getRathenaUser(user: User) {
+  const [athenaUser] = await athena.db
+    .select()
+    .from(athena.login)
+    .where(eq(athena.login.email, user.email));
+
+  return athenaUser;
 }

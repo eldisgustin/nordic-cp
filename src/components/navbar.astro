@@ -1,76 +1,45 @@
 ---
-import { getLangFromUrl, useTranslations } from "~/i18n/utils";
-import NavbarLink from "./ui/navbar_link.astro";
-import { SignIn } from "./ui/signin";
 import { Icon } from "astro-icon/components";
-import { SignOut } from "./ui/signout";
-import { SignUp } from "./ui/signup";
+import { eq } from "drizzle-orm";
+import { PageLocation } from "~/consts/page_location";
+import * as nordic from "~/db/nordic";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const { isAuthenticated } = Astro.locals;
+const pages = await nordic.db
+  .select()
+  .from(nordic.page)
+  .where(eq(nordic.page.location, PageLocation.Navbar));
 ---
 
 <div class="navbar bg-base-200 border-y border-base-100 shadow">
   <div class="navbar-start"></div>
-  <div class="navbar-center space-x-4">
-    <NavbarLink item="Home">
-      <Icon name="mdi:home" />{t("navbar.home")}
-    </NavbarLink>
-    <NavbarLink item="Download">
-      <Icon name="mdi:download"/>
-      {t("navbar.download")}
-    </NavbarLink>
-    <NavbarLink item="Forums">
-      {t("navbar.forums")}
-    </NavbarLink>
-    <NavbarLink item="Info">
-      <Icon name="mdi:info"/>
-      {t("navbar.info")}</NavbarLink>
-    <NavbarLink item="ItemDB">
-      <Icon name="mdi:info"/>
-      {t("navbar.itemdb")}
-    </NavbarLink>
-    <NavbarLink item="MobDB">
-      <Icon name="mdi:info"/>
-      {t("navbar.mobdb")}
-    </NavbarLink>
-      <button
-        class="link link-hover flex items-center gap-1"
-        popovertarget="account-menu"
-        style="style: anchor-name: --anchor-1"
-      >
-        <Icon name="mdi:user"/>{t("account.title")}
-      </button>
-    
-      <ul
-        popover=""
-        id="account-menu"
-        class="dropdown menu w-52 rounded-box border border-base-100 bg-base-300 shadow-sm"
-        style="style: position-anchor: --anchor-1"
-      >
-        {
-          isAuthenticated ? (
-              <li>
-                <a href="/account">
-                  <Icon name="mdi:user"/>
-                  {t("account.view")}
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <SignOut client:load>
-                    <Icon name="mdi:logout"/>
-                    {t("account.signout")}
-                  </SignOut>
-                </a>
-              </li>
-          ) : (
-            <li><a href="#"><SignIn client:load lang={lang} /></a></li>
-            <li><a href="#"><SignUp client:load lang={lang} /></a></li>
-          )
-        }
-      </ul>
-  </div>
+  <ul class="navbar-center space-x-4">
+    {
+      pages.map((page) => {
+        return (
+          <li>
+            <a href={page.path} class="link-hover flex gap-1 items-center">
+              <Icon name={page.icon} />
+              {page.title}
+            </a>
+          </li>
+        );
+      })
+    }
+    <li>
+      <a class="link-hover flex gap-1 items-center" href="/who-is-online">
+        <Icon name="mdi:question-mark" />
+        {t("navbar.who_is_online")}
+      </a>
+    </li>
+    <li>
+      <a class="link-hover flex gap-1 items-center" href="/account">
+        <Icon name="mdi:user" />
+        {t("navbar.account")}
+      </a>
+    </li>
+  </ul>
   <div class="navbar-end"></div>
 </div>

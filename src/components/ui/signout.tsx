@@ -17,8 +17,8 @@ export function SignOut({ children }: SignOutProps) {
   }
 
   return (
-    <span className="flex gap-1 items-center" onClick={handleLogout}>
+    <button className="btn" onClick={handleLogout}>
       {children}
-    </span>
+    </button>
   );
 }

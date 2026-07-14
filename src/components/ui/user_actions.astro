@@ -1,0 +1,24 @@
+---
+import { SignOut } from "~/components/ui/signout";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div class="flex items-center gap-2">
+  <div class="grow flex">
+    <h2 class="font-bold">{t("account.actions.title")}:</h2>
+    <div class="divider divider-horizontal"></div>
+    <ul class="flex gap-2">
+      <li>
+        <a class="link" href="/pages">{t("account.actions.pages")}</a>
+      </li>
+      <span class="opacity-50">/</span>
+      <li>
+        <a class="link" href="/accounts">{t("account.actions.accounts")}</a>
+      </li>
+    </ul>
+  </div>
+  <SignOut client:load>{t("account.signout")}</SignOut>
+</div>

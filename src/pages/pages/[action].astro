@@ -1,0 +1,87 @@
+---
+import { actions } from "astro:actions";
+import Editor from "~/components/ui/editor.astro";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+import Main from "~/layouts/main_layout.astro";
+import * as nordic from "~/db/nordic";
+import { eq } from "drizzle-orm";
+import { PageLocation } from "~/consts/page_location";
+
+const result = Astro.getActionResult(actions.pages.put);
+
+if (result && !result.error) {
+  return Astro.redirect("/pages");
+}
+
+const { action } = Astro.params;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+let page: typeof nordic.page.$inferSelect | null = null;
+
+if (action === "edit") {
+  const id = Astro.url.searchParams.get("id");
+  if (!id) {
+    Astro.redirect("/not-found");
+  }
+
+  [page] = await nordic.db
+    .select()
+    .from(nordic.page)
+    .where(eq(nordic.page.id, Number(id)));
+}
+---
+
+<Main title={page?.title ?? t("pages.new.title")}>
+  <main class="page-container">
+    <form method="post" action={actions.pages.put}>
+      <fieldset class="fieldset">
+        <label for="title" class="label">{t("pages.form.title")}</label>
+        <input type="hidden" name="id" value={page?.id} />
+        <input
+          id="title"
+          name="title"
+          type="text"
+          class="input w-full"
+          value={page?.title}
+          required
+        />
+
+        <label for="path" class="label">{t("pages.form.path")}</label>
+        <input
+          id="path"
+          name="path"
+          type="text"
+          class="input w-full"
+          value={page?.path}
+          required
+        />
+        <label for="path" class="label">{t("pages.form.location")}</label>
+        <select class="select w-full" name="location" id="location">
+          {
+            Object.values(PageLocation).map((location) => (
+              <option selected={page?.location === location} value={location}>
+                {t(`etc.page_location.${location}`)}
+              </option>
+            ))
+          }
+        </select>
+
+        <label for="path" class="label">{t("pages.form.icon")}</label>
+        <input
+          id="icon"
+          name="icon"
+          type="text"
+          class="input w-full"
+          value={page?.icon}
+          required
+        />
+
+        <label for="body" class="label">{t("pages.form.body")}</label>
+        <Editor id="body" name="body" value={page?.body} required />
+
+        <button class="mt-4 btn btn-primary">{t("pages.form.submit")}</button>
+      </fieldset>
+    </form>
+  </main>
+</Main>
