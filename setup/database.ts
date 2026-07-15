@@ -1,6 +1,6 @@
 import consola from "consola";
-import { db } from "~/db/nordic";
-import * as schema from "~/db/nordic/schema";
+import { db } from "~/providers/nordic/db";
+import * as schema from "~/providers/nordic/db/schema";
 
 consola.info("Creating default pages");
 

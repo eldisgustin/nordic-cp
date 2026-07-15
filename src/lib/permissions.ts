@@ -2,7 +2,7 @@ import type { User } from "better-auth";
 import { config } from "~/config";
 import { UserRole } from "~/consts/user_roles";
 import { getRathenaUser, getUserRole } from "./athena";
-import * as nordic from "~/db/nordic";
+import * as nordic from "~/providers/nordic/db";
 import { eq, like } from "drizzle-orm";
 import consola from "consola";
 

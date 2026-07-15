@@ -1,7 +1,7 @@
 ---
 import { eq } from "drizzle-orm";
 import { PagesIndex } from "~/consts/pages_index";
-import * as nordic from "~/db/nordic";
+import * as nordic from "~/providers/nordic/db";
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 import Main from "~/layouts/main_layout.astro";
 import { canSeePage } from "~/lib/permissions";

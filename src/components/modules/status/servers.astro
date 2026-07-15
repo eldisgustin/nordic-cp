@@ -2,16 +2,18 @@
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 import { isServerUp } from "~/lib/athena";
 import Pip from "./pip.astro";
+import { cache } from "~/lib/cache";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-[loginUp, charUp, mapUp] = await Promise.all([
-  isServerUp("Login"),
-  isServerUp("Char"),
-  isServerUp("Map"),
-]);
-
+const [loginUp, charUp, mapUp]: [boolean, boolean, boolean] =
+  cache.get("nordic:server-status") ??
+  (await Promise.all([
+    isServerUp("Login"),
+    isServerUp("Char"),
+    isServerUp("Map"),
+  ]));
 ---
 
 <ul class="flex gap-4">

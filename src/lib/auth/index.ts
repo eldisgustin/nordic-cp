@@ -1,9 +1,9 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { config } from "~/config";
-import * as nordic from "~/db/nordic";
-import * as athena from "~/db/athena";
-import * as schema from "~/db/nordic/schema";
+import * as nordic from "~/providers/nordic/db";
+import * as athena from "~/providers/athena/db";
+import * as schema from "~/providers/nordic/db/schema";
 import { sendMail } from "~/lib/email";
 import { createAuthMiddleware } from "better-auth/api";
 import consola from "consola";

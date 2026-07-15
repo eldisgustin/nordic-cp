@@ -3,7 +3,7 @@ import { PagesIndex } from "~/consts/pages_index";
 import { formatNumber, getLangFromUrl, useTranslations } from "~/i18n/utils";
 import AccountLayout from "~/layouts/account_layout.astro";
 import { isAllowedTo } from "~/lib/permissions";
-import * as athena from "~/db/athena";
+import * as athena from "~/providers/athena/db";
 import { eq } from "drizzle-orm";
 import { Icon } from "astro-icon/components";
 

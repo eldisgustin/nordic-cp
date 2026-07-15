@@ -1,11 +1,11 @@
 ---
-import Main from "~/layouts/main_layout.astro";
-import * as athena from "~/db/athena";
-import { eq } from "drizzle-orm";
-import { getLangFromUrl, useTranslations } from "~/i18n/utils";
-import { canSeePage } from "~/lib/permissions";
-import { PagesIndex } from "~/consts/pages_index";
 import { Icon } from "astro-icon/components";
+import { eq } from "drizzle-orm";
+import { PagesIndex } from "~/consts/pages_index";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+import Main from "~/layouts/main_layout.astro";
+import { canSeePage } from "~/lib/permissions";
+import * as athena from "~/providers/athena/db";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);

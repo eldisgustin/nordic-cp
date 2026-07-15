@@ -3,7 +3,7 @@ import { actions } from "astro:actions";
 import Editor from "~/components/ui/editor.astro";
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 import Main from "~/layouts/main_layout.astro";
-import * as nordic from "~/db/nordic";
+import * as nordic from "~/providers/nordic/db";
 import { eq } from "drizzle-orm";
 import { PageLocation } from "~/consts/page_location";
 import { isInputError } from "astro:actions";

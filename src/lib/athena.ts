@@ -5,7 +5,7 @@ import { count, eq, gt } from "drizzle-orm";
 import ms from "ms";
 import net from "node:net";
 import { config } from "~/config";
-import * as athena from "~/db/athena";
+import * as athena from "~/providers/athena/db";
 import { UserRole } from "~/consts/user_roles";
 import type { User } from "better-auth";
 

@@ -3,7 +3,7 @@ import { Icon } from "astro-icon/components";
 import { eq } from "drizzle-orm";
 import { PageLocation } from "~/consts/page_location";
 import { PagesIndex } from "~/consts/pages_index";
-import * as nordic from "~/db/nordic";
+import * as nordic from "~/providers/nordic/db";
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);

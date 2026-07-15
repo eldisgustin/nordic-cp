@@ -25,7 +25,11 @@ const title = [config.get("Application.SiteTittle"), Astro.props.title].filter(
   <body class="bg-base-300 min-h-screen">
     <Hero />
     <Navbar />
-    <ServerResume server:defer />
+    <div
+      class="flex justify-center border-base-100 bg-base-200 border-b h-10 items-center text-sm py-1"
+    >
+      <ServerResume server:defer />
+    </div>
 
     <div class="max-w-7xl mx-auto p-8">
       <slot />

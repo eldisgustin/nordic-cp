@@ -1,6 +1,6 @@
 import { defineMiddleware, sequence } from "astro:middleware";
 import ms from "ms";
-import * as athena from "~/db/athena";
+import * as athena from "~/providers/athena/db";
 import { getRathenaUser, getUserRole } from "~/lib/athena";
 import { auth } from "~/lib/auth";
 import { cache } from "~/lib/cache";

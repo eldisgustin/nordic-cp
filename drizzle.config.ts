@@ -4,7 +4,7 @@ import config from "config";
 export default defineConfig({
   out: "./drizzle",
   dialect: "mysql",
-  schema: "./src/db/nordic/schema.ts",
+  schema: "./src/providers/nordic/db/schema.ts",
 
   dbCredentials: {
     url: config.get("Application.DatabaseURL"),

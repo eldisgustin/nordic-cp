@@ -1,7 +1,7 @@
 import { z } from "astro/zod";
 import { defineAction } from "astro:actions";
 import { PageLocation } from "~/consts/page_location";
-import * as nordic from "~/db/nordic";
+import * as nordic from "~/providers/nordic/db";
 
 export const pages = {
   put: defineAction({
@@ -35,7 +35,7 @@ export const pages = {
           set: page,
         });
 
-      await ctx.cache.invalidate({ path: '/[path]' });
+      await ctx.cache.invalidate({ path: "/[path]" });
     },
   }),
 };
