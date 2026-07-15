@@ -25,7 +25,7 @@ const title = [config.get("Application.SiteTittle"), Astro.props.title].filter(
   <body class="bg-base-300 min-h-screen">
     <Hero />
     <Navbar />
-    {Astro.url.pathname === "/" && <ServerResume />}
+    <ServerResume server:defer />
 
     <div class="max-w-7xl mx-auto p-8">
       <slot />

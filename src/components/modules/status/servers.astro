@@ -6,11 +6,12 @@ import Pip from "./pip.astro";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const [loginUp, charUp, mapUp] = await Promise.all([
+[loginUp, charUp, mapUp] = await Promise.all([
   isServerUp("Login"),
   isServerUp("Char"),
   isServerUp("Map"),
 ]);
+
 ---
 
 <ul class="flex gap-4">

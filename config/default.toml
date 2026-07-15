@@ -4,7 +4,6 @@ BasePath = "/"
 # ------ Customization
 BaseURL = "http://localhost:4321" 
 DatabaseURL = "mysql://user:password@localhost/nordic" 
-ServerStatusCacheTTL = "1m" # Duration of status cache to avoid socket spam and potentially be marked as spam
 SiteDefaultLang = "en" 
 SiteTittle = "Nordic Control Panel" 
 Timezone = "+00:00" # Set null for system's default

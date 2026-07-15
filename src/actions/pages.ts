@@ -34,6 +34,8 @@ export const pages = {
         .onDuplicateKeyUpdate({
           set: page,
         });
+
+      await ctx.cache.invalidate({ path: '/[path]' });
     },
   }),
 };

@@ -29,4 +29,8 @@ export default defineConfig({
   cache: {
     provider: memoryCache(),
   },
+
+  routeRules: {
+    '/api/auth/[...all]': { maxAge: 0 }
+  }
 });
