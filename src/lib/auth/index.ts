@@ -10,6 +10,7 @@ import consola from "consola";
 import { and, eq } from "drizzle-orm";
 
 export const auth = betterAuth({
+  trustedOrigins: config.get("Application.TrustedOrigins"),
   logger: {
     log: consola.log,
   },

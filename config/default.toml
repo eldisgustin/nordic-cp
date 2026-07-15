@@ -1,6 +1,6 @@
 [Application]
 Port=8080
-BasePath = "/" 
+BasePath = "/"
 # ------ Customization
 BaseURL = "http://localhost:4321" 
 DatabaseURL = "mysql://user:password@localhost/nordic" 
@@ -16,6 +16,8 @@ UseCaptcha = false
 # with high entropy.
 # You can use openssl rand -base64 32 to generate one.
 AuthSecret = "32charsecret"
+AuthTrustedOrigins = ["http://localhost:*"]
+
 
 # ------ Account settings
 MaxPasswordLength = 31
