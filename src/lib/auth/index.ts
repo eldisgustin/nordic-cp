@@ -10,6 +10,9 @@ import consola from "consola";
 import { and, eq } from "drizzle-orm";
 
 export const auth = betterAuth({
+  logger: {
+    log: consola.log,
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,

@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import { eq } from "drizzle-orm";
 import { PageLocation } from "~/consts/page_location";
+import { PagesIndex } from "~/consts/pages_index";
 import * as nordic from "~/db/nordic";
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 
@@ -29,13 +30,16 @@ const pages = await nordic.db
       })
     }
     <li>
-      <a class="link-hover flex gap-1 items-center" href="/who-is-online">
+      <a
+        class="link-hover flex gap-1 items-center"
+        href={PagesIndex.WhoIsOnline}
+      >
         <Icon name="mdi:question-mark" />
         {t("navbar.who_is_online")}
       </a>
     </li>
     <li>
-      <a class="link-hover flex gap-1 items-center" href="/account">
+      <a class="link-hover flex gap-1 items-center" href={PagesIndex.MyAccount}>
         <Icon name="mdi:user" />
         {t("navbar.account")}
       </a>

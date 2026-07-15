@@ -174,5 +174,9 @@
   "pages.view.thead.last_modified": "Last modified",
   "pages.view.tbody.view": "View page",
   "pages.view.tbody.edit-action": "Edit",
-  "pages.view.tbody.delete-action": "Delete"
+  "pages.view.tbody.delete-action": "Delete",
+
+  "not_found.title": "Page not found",
+  "not_found.body_generic": "We couldnt find the requested page",
+  "not_found.body_requested": "We couldn't find the page \"${page}\""
 }

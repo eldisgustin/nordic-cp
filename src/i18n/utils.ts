@@ -5,13 +5,14 @@
 import { ui, defaultLang, type Languages } from "./ui";
 import { format, formatRelative, type Locale } from "date-fns";
 import { enUS } from "date-fns/locale";
+import template from "lodash/template";
 
 const locales: Record<Languages, Locale> = {
   en: enUS,
 };
 
 const dateTimeFormat = "y-MM-dd HH:mm:ss";
-const dateFormat = "y-mm-dd";
+const dateFormat = "y-MM-dd";
 
 export function getLangFromUrl(url: URL) {
   const [, lang] = url.pathname.split("/");
@@ -20,8 +21,11 @@ export function getLangFromUrl(url: URL) {
 }
 
 export function useTranslations(lang: Languages) {
-  return function t(key: keyof (typeof ui)[typeof defaultLang]) {
-    return ui[lang][key] || ui[defaultLang][key] || `{ ${key} }`;
+  return function t(key: keyof (typeof ui)[typeof defaultLang], data?: object) {
+    const compiled = template(
+      ui[lang][key] || ui[defaultLang][key] || `{ ${key} }`,
+    );
+    return compiled(data);
   };
 }
 

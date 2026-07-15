@@ -2,32 +2,40 @@
 import { eq } from "drizzle-orm";
 import { PagesIndex } from "~/consts/pages_index";
 import * as nordic from "~/db/nordic";
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 import Main from "~/layouts/main_layout.astro";
 import { canSeePage } from "~/lib/permissions";
 
-const { path } = Astro.params;
+let { path } = Astro.params;
+path = `/${path}`;
 
 if (!canSeePage(Astro.url.pathname, Astro.locals.user)) {
-  return Atro.redirect(PagesIndex.Unauthorized);
-}
-
-if (!path) {
-  return Astro.redirect(PagesIndex.NotFound);
+  return Astro.rewrite(PagesIndex.Unauthorized);
 }
 
 const [page] = await nordic.db
   .select()
   .from(nordic.page)
-  .where(eq(nordic.page.path, `/${path}`))
+  .where(eq(nordic.page.path, path))
   .limit(1);
 
-if (!page) {
-  return Astro.redirect(PagesIndex.NotFound);
-}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<Main title={page.title}>
-  <article class="prose max-w-full">
-    <Fragment set:html={page.body} />
-  </article>
-</Main>
+{
+  page ? (
+    <Main title={page.title}>
+      <article class="prose max-w-full">
+        <Fragment set:html={page.body} />
+      </article>
+    </Main>
+  ) : (
+    <Main title={t("not_found.title")}>
+      <div class="space-y-4">
+        <h1 class="text-2xl font-bold text-primary">{t("not_found.title")}</h1>
+        <p>{t("not_found.body_requested", { page: path })}</p>
+      </div>
+    </Main>
+  )
+}

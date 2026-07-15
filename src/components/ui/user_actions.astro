@@ -1,5 +1,5 @@
 ---
-import { SignOut } from "~/components/ui/signout";
+import SignOut from "~/components/ui/signout.astro";
 import { getLangFromUrl, useTranslations } from "~/i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);
@@ -20,5 +20,5 @@ const t = useTranslations(lang);
       </li>
     </ul>
   </div>
-  <SignOut client:load>{t("account.signout")}</SignOut>
+  <SignOut />
 </div>

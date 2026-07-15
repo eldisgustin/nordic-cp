@@ -1,4 +1,8 @@
 export enum PagesIndex {
-  NotFound = "/errors/not-found",
-  Unauthorized = "/errors/unauthorized",
+  SignIn = "/signin",
+  Accounts = "/accounts",
+  MyAccount = "/my-account",
+  Unauthorized = "/unauthorized",
+  WhoIsOnline = "/who-is-online",
+  NotFound = "/not-found",
 }

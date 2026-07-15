@@ -1,0 +1,51 @@
+---
+import { getLangFromUrl, useTranslations } from "~/i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<form id="signin-form" data-signin>
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">{t("signin.title")}</legend>
+
+    <label class="label">{t("signin.form.email")}</label>
+    <input
+      name="email"
+      type="email"
+      class="input w-full"
+      placeholder={t("signin.form.email")}
+      required
+    />
+
+    <label class="label">{t("signin.form.password")}</label>
+    <input
+      name="password"
+      type="password"
+      class="input w-full"
+      placeholder={t("signin.form.password")}
+      required
+    />
+    <button class="btn btn-neutral mt-4">{t("signin.submit")}</button>
+  </fieldset>
+</form>
+
+<script>
+  import { PagesIndex } from "~/consts/pages_index";
+  import { authClient } from "~/lib/auth/client";
+  const form = document.getElementById("signin-form");
+
+  form?.addEventListener("submit", async function onSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+    const { data } = await authClient.signIn.email({
+      email: formData.get("email")!.toString(),
+      password: formData.get("password")!.toString(),
+      callbackURL: PagesIndex.MyAccount,
+    });
+
+    if (data?.redirect) {
+      window.location.assign(data.url!);
+    }
+  });
+</script>

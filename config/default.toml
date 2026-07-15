@@ -1,6 +1,7 @@
 [Application]
-# ------ Customization
+Port=8080
 BasePath = "/" 
+# ------ Customization
 BaseURL = "http://localhost:4321" 
 DatabaseURL = "mysql://user:password@localhost/nordic" 
 ServerStatusCacheTTL = "1m" # Duration of status cache to avoid socket spam and potentially be marked as spam

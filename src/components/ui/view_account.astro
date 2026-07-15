@@ -1,8 +1,6 @@
 ---
-import type { User } from "better-auth";
 import cn from "classnames";
 import { eq } from "drizzle-orm";
-import { SignOut } from "~/components/ui/signout";
 import * as athena from "~/db/athena";
 import {
   formatDateTime,
@@ -19,13 +17,14 @@ const { roAccount } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const characters = await athena.db
-  .select()
+const result = await athena.db
+  .select({ char: athena.char, guild: { name: athena.guild.name } })
   .from(athena.char)
   .where(eq(athena.char.accountId, roAccount.accountId))
-  .orderBy(athena.char.charNum);
+  .orderBy(athena.char.charNum)
+  .leftJoin(athena.guild, eq(athena.guild.guildId, athena.char.guildId));
 
-const totalZeny = characters.reduce((prev, next) => prev + next.zeny, 0);
+const totalZeny = result.reduce((prev, next) => prev + next.char.zeny, 0);
 ---
 
 <div class="space-y-8">
@@ -91,28 +90,28 @@ const totalZeny = characters.reduce((prev, next) => prev + next.zeny, 0);
         </thead>
         <tbody>
           {
-            characters.map((character) => {
-              const isOnline = Boolean(character.online);
+            result.map(({ char, guild }) => {
+              const isOnline = Boolean(char.online);
               return (
                 <tr>
                   <td>
                     <a
                       class="link link-primary"
-                      href={`/characters/${character.charId}`}
+                      href={`/characters/${char.charId}`}
                     >
-                      {character.name}
+                      {char.name}
                     </a>
                   </td>
                   <td>
                     {
                       // @ts-ignore
-                      t(`game.job_class.${character.class}`)
+                      t(`game.job_class.${char.class}`)
                     }
                   </td>
-                  <td>{character.baseLevel}</td>
-                  <td>{character.jobLevel}</td>
-                  <td>{formatNumber(character.zeny, lang)}</td>
-                  <td>{character.guildId}</td>
+                  <td>{char.baseLevel}</td>
+                  <td>{char.jobLevel}</td>
+                  <td>{formatNumber(char.zeny, lang)}</td>
+                  <td>{guild?.name ?? "-"}</td>
                   <td
                     class={cn({
                       "opacity-40": !isOnline,
