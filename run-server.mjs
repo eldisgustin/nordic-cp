@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import express from "express";
 import config from "config";
 import { handler as ssrHandler } from "./dist/server/entry.mjs";
