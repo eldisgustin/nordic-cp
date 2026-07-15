@@ -10,7 +10,6 @@ import consola from "consola";
 import { and, eq } from "drizzle-orm";
 
 export const auth = betterAuth({
-  trustedOrigins: config.get("Application.AuthTrustedOrigins"),
   logger: {
     log: consola.log,
   },
@@ -20,7 +19,7 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
   },
   baseURL: config.get("Application.BaseURL"),
-  secret: config.get("Application.AuthSecret"),
+  secret: config.get("Authentication.Secret"),
   database: drizzleAdapter(nordic.db, {
     provider: "mysql",
     schema: schema,
@@ -57,7 +56,7 @@ export const auth = betterAuth({
       consola.info("Sending verification email");
       sendMail(
         {
-          from: `${config.get("Application.Email.FromName")} <${config.get("Application.Email.FromAddress")}>`,
+          from: `${config.get("Email.FromName")} <${config.get("Email.FromAddress")}>`,
           to: user.email,
           subject: "Verify your email address",
           text: `Click the link to verify your email: ${url}`,

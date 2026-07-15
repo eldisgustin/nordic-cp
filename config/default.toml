@@ -1,31 +1,23 @@
 [Application]
-Port=8080
+Port = 8080
+BaseURL = "http://localhost:4321"
 BasePath = "/"
-# ------ Customization
-BaseURL = "http://localhost:4321" 
-DatabaseURL = "mysql://user:password@localhost/nordic" 
-SiteDefaultLang = "en" 
-SiteTittle = "Nordic Control Panel" 
-Timezone = "+00:00" # Set null for system's default
-UseCaptcha = false 
+SiteDefaultLang = "en"
+SiteTitle = "Nordic Control Panel"
+DatabaseURL = "mysql://user:password@localhost/nordic"
+
+[Security]
+AllowedDomains = [{ protocol = "https", hostname = "mysite.com" }]
 
 # ------ Authentication
 # A secret value used for encryption and hashing.
 # It must be at least 32 characters and generated
 # with high entropy.
 # You can use openssl rand -base64 32 to generate one.
-AuthSecret = "32charsecret"
-AuthTrustedOrigins = ["http://localhost:*"]
+[Authentication]
+Secret = "32charsecret"
 
-
-# ------ Account settings
-MaxPasswordLength = 31
-MaxUsernameLength = 23
-MinPasswordLenght = 8
-MinUsernameLength = 4
-UsernameAllowerChars = "a-zA-Z0-9_"
-
-[Application.Email]
+[Email]
 # ------ Email settings
 Enabled = false
 # Below values are unused if previous value is not enabled
@@ -39,9 +31,9 @@ SMTPPort = 587
 DatabaseURL = "mysql://user:password@localhost/rathena"
 ServerName = "MyRoServer"
 # This setting correlates the minimum db login.group_id with the internal role system
-Levels = {0 = "Normal", 2 = "Support", 10 = "GM", 99 = "Admin"}
+Levels = { 0 = "Normal", 2 = "Support", 10 = "GM", 99 = "Admin" }
 
 [Athena.Servers]
-Char = {host = "localhost", port = 6121}
-Login = {host = "localhost", port = 6900}
-Map = {host = "localhost", port = 5121}
+Char = { host = "localhost", port = 6121 }
+Login = { host = "localhost", port = 6900 }
+Map = { host = "localhost", port = 5121 }

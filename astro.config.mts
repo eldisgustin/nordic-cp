@@ -4,11 +4,18 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
 import { defineConfig, memoryCache } from "astro/config";
+import { config } from "./src/config";
 
 // https://astro.build/config
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+  },
+
+  base: config.get("Application.BasePath"),
+
+  security: {
+    allowedDomains: config.get("Security.AllowedDomains"),
   },
 
   output: "server",
@@ -31,6 +38,6 @@ export default defineConfig({
   },
 
   routeRules: {
-    '/api/auth/[...all]': { maxAge: 0 }
-  }
+    "/api/auth/[...all]": { maxAge: 0 },
+  },
 });
